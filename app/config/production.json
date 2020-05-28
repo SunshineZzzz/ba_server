@@ -1,0 +1,32 @@
+{
+	"app": {
+		"tcpHost": "127.0.0.1",
+		"tcpPort": 19999,
+		"workerNum": 2,
+		"logXmlFile": "${APP_PATH}/app/config/log.xml",
+		"nMaxRestart": 10
+	},
+	"mysql": {
+		"log": true,
+		"basvr": {
+			"host": "127.0.0.1",
+			"port": 3306,
+			"user": "root",
+			"password": "123456",
+			"database": "basvr",
+			"connectionLimit": 10
+		}
+	},
+	"hb": {
+		"mSendInterval": 10000,
+		"wCheckInterval": 10000,
+		"wTimeout":120000
+	},
+	"logger": {
+		"path": "${APP_PATH}/log/",
+		"name": "default.log",
+		"level": "ALL",
+		"host": "127.0.0.1",
+		"port": 5555
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "ba_server",
+	"version": "1.0.0",
+	"description": "The Business analysis server",
+	"dependencies": {
+		"log4js": "^6.0.0",
+		"underscore": "^1.0.0",
+		"config": "^3.0.0",
+		"xml2js": "~0.4.0",
+		"mysql2": "^2.0.0"
+	}
+}
