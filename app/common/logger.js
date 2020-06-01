@@ -22,7 +22,7 @@ if (global.isMaster === true) {
 
   function tokensUser(logEvent) {
     return (process.pid === logEvent.pid) ? 'Master' : 'Worker';
-  }
+  };
 
   log4js.configure({
     appenders: {

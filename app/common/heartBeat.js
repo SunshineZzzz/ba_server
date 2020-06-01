@@ -32,7 +32,7 @@ class HeartBeatMaster {
       this.timerHBObj = null;
     }
   }
-}
+};
 
 // worker心跳
 class HeartBeatWorker {
@@ -64,6 +64,6 @@ class HeartBeatWorker {
       this.timerHBObj = null;
     }
   }
-}
+};
 
 module.exports = global.isMaster ? new HeartBeatMaster() : new HeartBeatWorker();

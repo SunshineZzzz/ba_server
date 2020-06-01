@@ -21,8 +21,9 @@ client.connect(port, host, function() {
 
 client.on('data', function(data) {
   netPacket.unpackData(data, function (dataCmd, jsonStr) {
-    if (dataCmd == STSCmd.eSTS_IDIP_Hello) {
+    if (dataCmd == STSCmd.eSTS_INNERBA_HELLO) {
       console.log('STS_IDIP_Hello: %s', jsonStr);
+      // testInnerMsg();
       return;
     }
 
@@ -45,6 +46,7 @@ client.on('error', function(err) {
   console.log(err);
 });
 
+// 模拟发送日志
 setInterval(()=>{
   for (var [id, log] of rawLog) {
     client.write(netPacket.packData(STSCmd.eSTS_INNERBA_DATA, {
@@ -53,3 +55,16 @@ setInterval(()=>{
     }));
   }
 }, 1000);
+
+// 模拟发送内部请求
+function testInnerMsg() {
+  client.write(netPacket.packData(STSCmd.eSTS_INNERBA_INNER, {
+    head: {
+      grpId: 1001,
+      cmdId: 1,
+    },
+    body: {
+      msg: 'have a test for inner cmd'
+    }
+  }));
+};

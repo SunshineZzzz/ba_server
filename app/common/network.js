@@ -7,6 +7,7 @@ const STSCmd = require('../config/STSCmd');
 const dealCmd = require('./dealCmd');
 const net  = require('net');
 const config = require('config');
+const common = require('./common');
 
 // 处理连接
 function handleConnection(logParse, socket) {
@@ -51,11 +52,31 @@ function handleConnection(logParse, socket) {
             logger.error('[net exception]: eSTS_INNERBA_DATA error, %s', jsonStr);
             return;
           }
-          logger.info("get eSTS_INNERBA_DATA: %s", JSON.stringify(d));
-          await dealCmd.dealRawLog(logParse, d.logId, d.logMsg);
+          logger.info('get eSTS_INNERBA_DATA: %s', JSON.stringify(d));
+          await dealCmd.dealRawLog(logParse, d.logId, d.logMsg).catch((e) => {
+            logger.error('dealCmd.dealRawLog error: %s', e.stack);
+          });
+          break;
+        }
+        case STSCmd.eSTS_INNERBA_INNER: {
+          if (_.isEmpty(d.head) || _.isUndefined(d.head.cmdId)) {
+            logger.error('[net exception]: eSTS_INNERBA_INNER error,%s', jsonStr);
+            return;
+          }
+          d.head.originGrpId = socket.grpId;
+          logger.info('get eSTS_INNERBA_INNER: %s', JSON.stringify(d));
+          try {
+            await dealCmd.dealInnerMessage(d);
+          } catch(e) {
+            logger.error('dealCmd.dealInnerMessage error: %s', e.stack);
+          }
           break;
         }
         default: {
+          if (_.isEmpty(d.head) || _.isNull(d.head.reqId)) {
+            return;
+          }
+          common.dealWaitInnerMessage(d.head.reqId, null, d);
           break;
         }
       }
@@ -73,7 +94,7 @@ function handleConnection(logParse, socket) {
     logger.info('game socket connection %s error: %s', remoteAddress, err.message);
     dealCmd.delSocket(socket.grpId);
   }
-}
+};
 
 module.exports = {
 	handleConnection: handleConnection

@@ -93,9 +93,9 @@ master.startWork = function (nodeExecPath, index) {
     }
   });
   worker.on('error', (err) => {
-    logger.error(`worker-${wk.pid} error: ${err.toString()}`)
+    logger.error(`worker-${wk.pid} error: ${err.stack}`)
   });
-}
+};
 
 // 轮询分发工作
 master.roundRobinWorker = function (tcpServer) {
@@ -114,6 +114,6 @@ master.initWorkers = function (nodeExecPath) {
     }
   }
   return true;
-}
+};
 
 module.exports = master;

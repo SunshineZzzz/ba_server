@@ -4,7 +4,8 @@
 		"tcpPort": 19999,
 		"workerNum": 2,
 		"logXmlFile": "${APP_PATH}/app/config/logTest.xml",
-		"nMaxRestart": 10
+		"nMaxRestart": 10,
+		"waitTime": 5000
 	},
 	"mysql": {
 		"log": true,

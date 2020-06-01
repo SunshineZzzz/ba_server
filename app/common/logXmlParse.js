@@ -77,6 +77,6 @@ async function parseXML() {
   }
 
   return logXml;
-}
+};
 
 module.exports = parseXML;
