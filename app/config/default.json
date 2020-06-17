@@ -5,7 +5,8 @@
 		"workerNum": 2,
 		"logXmlFile": "${APP_PATH}/app/config/logTest.xml",
 		"nMaxRestart": 10,
-		"waitTime": 5000
+		"waitTime": 5000,
+		"logSeparator": ","
 	},
 	"mysql": {
 		"log": true,

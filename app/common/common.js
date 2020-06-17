@@ -18,6 +18,8 @@ let innerReqs = {}
 let InnerReqId = 0;
 // 内部请求超时
 let InnerWaitTime = config.has('app.waitTime') ? config.get('app.waitTime') : 5000;
+// 原始日志分隔符
+let logSeparator = config.has('app.logSeparator') ? config.get('app.logSeparator') : ',';
 
 // null or undefined
 common.isNullOrUndefined = function(object) {
@@ -158,7 +160,7 @@ common.logMsg2Arr = function(logMsg) {
   if (_.isUndefined(logMsg) || _.isNull(logMsg)) {
     return [null, null, null, null, null];
   }
-  let arrLogs = logMsg.split(',');
+  let arrLogs = logMsg.split(logSeparator);
   let processInfo = arrLogs.shift().trim();
   let processTime = arrLogs.shift().trim();
   let rawLogId = arrLogs.shift().trim();

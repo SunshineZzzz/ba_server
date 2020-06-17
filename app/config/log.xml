@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--
-indexkey mysql对应的键，|作为分隔符
-type mysql对应数据库的类型(int,bigint,int unsigned,varchar(size),float)
-number 日志逗号分割后所在的字段
 -->
 <metalib name="Log" version="1">
 	<command name="Single" desc="单个日志落库项目">
