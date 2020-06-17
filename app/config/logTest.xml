@@ -5,34 +5,50 @@ type mysql对应数据库的类型(int,bigint,int unsigned,varchar(size),float)
 number 日志逗号分割后所在的字段
 -->
 <metalib name="Log" version="1">
-<struct desc="玩家登陆" id="1001" name="PlayerLogin" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
-  <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
-  <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
-  <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
-  <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
-  <entry desc="用户OPENID号" name="OpenID"  type="varchar(64)" number="6"/>
-  <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="3"/>
-  <entry desc="等级" name="Level" type="int" number="8"/>
-  <entry desc="玩家好友数量" name="PlayerFriendsNum" type="int" number="12"/>
-  <entry desc="像素密度" name="Density" type="float" number="10"/>
-</struct>
-<struct desc="玩家登出" id="1002" name="PlayerLogout" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
-  <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
-  <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
-  <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
-  <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
-  <entry desc="用户OPENID号" name="OpenID" type="varchar(64)" number="6"/>
-  <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="3"/>
-  <entry desc="(必填)本次登录在线时间(秒)" name="OnlineTime" type="int" number="5"/>
-  <entry desc="(必填)等级" name="Level" type="int" number="11"/>
-</struct>
-<struct desc="玩家掉线统计" id="1003" name="PlayerDropStat" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
-  <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
-  <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
-  <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
-  <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
-  <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="10"/>
-  <entry desc="状态" name="IState" type="int" number="13"/>
-  <entry desc="掉线原因" name="IReason" type="int" number="15"/>
-</struct>
+  <command name="Single" desc="单个日志落库项目">
+    <struct desc="玩家登陆" id="1001" name="PlayerLogin" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
+      <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
+      <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
+      <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
+      <entry desc="用户OPENID号" name="OpenID"  type="varchar(64)" number="6"/>
+      <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="3"/>
+      <entry desc="等级" name="Level" type="int" number="8"/>
+      <entry desc="玩家好友数量" name="PlayerFriendsNum" type="int" number="12"/>
+      <entry desc="像素密度" name="Density" type="float" number="10"/>
+    </struct>
+    <struct desc="玩家登出" id="1002" name="PlayerLogout" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
+      <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
+      <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
+      <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
+      <entry desc="用户OPENID号" name="OpenID" type="varchar(64)" number="6"/>
+      <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="3"/>
+      <entry desc="(必填)本次登录在线时间(秒)" name="OnlineTime" type="int" number="5"/>
+      <entry desc="(必填)等级" name="Level" type="int" number="11"/>
+    </struct>
+    <struct desc="玩家掉线统计" id="1003" name="PlayerDropStat" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
+      <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
+      <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
+      <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
+      <entry desc="角色唯一ID" name="PlayerID" type="bigint" number="10"/>
+      <entry desc="状态" name="IState" type="int" number="13"/>
+      <entry desc="掉线原因" name="IReason" type="int" number="15"/>
+    </struct>
+  </command>
+  <command name="Multiple" desc="多个日志落库项目">
+    <struct desc="测试多日志1" ids="1001|1002|1003" name="Multi_Test1" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)" script="test1.js">
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int"/>
+      <entry desc="记录时间" name="EventTime" type="int unsigned"/>
+      <entry desc="ios 0 /android 1" name="PlatID" type="int"/>
+      <entry desc="微信 0 /手Q 1" name="AreaID" type="int"/>
+      <entry desc="角色唯一ID" name="PlayerID" type="bigint"/>
+      <entry desc="状态" name="IState" type="int"/>
+      <entry desc="掉线原因" name="IReason" type="int"/>
+      <entry desc="(必填)本次登录在线时间(秒)" name="OnlineTime" type="int"/>
+      <entry desc="(必填)等级" name="Level" type="int"/>
+      <entry desc="像素密度" name="Density" type="float"/>
+    </struct>
+  </command>
 </metalib>

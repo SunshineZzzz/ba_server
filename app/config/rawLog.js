@@ -1,5 +1,6 @@
 'use strict';
 
+// 用于测试
 module.exports = new Map([
   // GameSvrId-1, EventTime-2, PlayerID-3, PlatID-4, OpenID-6, AreaID-7, Level-8, Density-10, PlayerFriendsNum-12
   [1001, "Misc1.6764,22-16:59:36,1001,PlayerLogin,1001,1590369878,2219000000000000002,1,X,o89qXvyRjJv0Rig-TCZLgoRC0h1E,1,97,X,1.1,X,10"],

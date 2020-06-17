@@ -19,6 +19,11 @@ let InnerReqId = 0;
 // 内部请求超时
 let InnerWaitTime = config.has('app.waitTime') ? config.get('app.waitTime') : 5000;
 
+// null or undefined
+common.isNullOrUndefined = function(object) {
+  return (object === null || object === undefined);
+}
+
 // 获取CPU数量
 common.getCpuNum = function () {
   return os.cpus().length;
@@ -59,6 +64,15 @@ common.getDbConn = async function (dbName) {
   }
 
   return mysqlDb.getConn(dbName);
+};
+
+// 执行日志的SQL语句
+common.logSql2Db = async function (sql, params) {
+  if (this.isNullOrUndefined(sql) || this.isNullOrUndefined(params)) {
+    return;
+  }
+  let db = await this.getDbConn('basvr');
+  await db.execute(sql, params);
 };
 
 // 设置内部的请求
@@ -119,5 +133,38 @@ common.waitForInnerResponse = async function(reqId) {
 common.dealWaitInnerMessage = function (reqId, err, data) {
   g.dispatcher.emit('waitMessage', reqId, err, data);
 };
+
+// 是否是有效的字符串
+common.isValidStr = function (str) {
+  return (_.isString(str) && str.trim().length > 0);
+}
+
+// 字符串是否可以转化成整数
+common.strIsNumber = function (str, radix = 10) {
+  return !isNaN(parseInt(str, radix));
+}
+
+// Map or Set 对象的序列化 
+common.mapOrSetSerialize = function (mapObj, space = '  ') {
+  if (!_.isMap(mapObj)) {
+    return '';
+  }
+  // ...遍历generator
+  return JSON.stringify([...mapObj.entries()], null, space);
+}
+
+// 将原始日志转换成数组
+common.logMsg2Arr = function(logMsg) {
+  if (_.isUndefined(logMsg) || _.isNull(logMsg)) {
+    return [null, null, null, null, null];
+  }
+  let arrLogs = logMsg.split(',');
+  let processInfo = arrLogs.shift().trim();
+  let processTime = arrLogs.shift().trim();
+  let rawLogId = arrLogs.shift().trim();
+  let rawLogName = arrLogs.shift().trim();
+  arrLogs.unshift('pad');
+  return [arrLogs, processInfo, processTime, rawLogId, rawLogName];
+}
 
 module.exports = common;

@@ -46,35 +46,25 @@ dealCmd.delSocket = function (svrGrpId) {
   delete sockets[svrGrpId];
 };
 
-// 处理原始日志
-dealCmd.dealRawLog = async function(logParse, logId, logMsg) {
-  if (!_.isMap(logParse) || !_.isNumber(logId) || !_.isString(logMsg)) {
-    return;
+// 单个日志落库
+function dealSingleLog(logObj, logMsg) {
+  let arrRst = [null, null];
+  if (_.isNull(logObj) || 
+      _.isUndefined(logObj) || 
+      !common.isValidStr(logMsg)) {
+    return arrRst;
   }
-
-  let logObj = logParse.get(logId.toString());
-  if (_.isUndefined(logObj) || !_.isMap(logObj.field) || logObj.field.size <= 0) {
-    return;
+  let [arrLogs, processInfo, processTime, rawLogId, rawLogName] = common.logMsg2Arr(logMsg);
+  if (arrLogs === null) {
+    return arrRst;
   }
-
-  let arrLogs = logMsg.split(',');
-  if (arrLogs.length - 4 < logObj.maxNumber) {
-    logger.error('arrLogs.length - 4 <= logObj.maxNumber,%d,%d,%s,%s', arrLogs.length, 
-      logObj.maxNumber, logObj.logId, logObj.logName);
-    return;
+  if ((arrLogs.length-1) < logObj.maxNumber) {
+    return arrRst;
   }
-
-  let processInfo = arrLogs.shift().trim();
-  let processTime = arrLogs.shift().trim();
-  let rawLogId = arrLogs.shift().trim();
-  let rawLogName = arrLogs.shift().trim();
-  arrLogs.unshift('pad');
-  if (logObj.logName !== rawLogName || logObj.logId !== rawLogId) {
-    logger.error('logObj.logName !== rawLogName || logObj.logId !== rawLogId,%s,%s,%s,%s', rawLogId, 
-      rawLogName, logObj.logId, logObj.logName);
-    return;
+  if (logObj.logName !== rawLogName || 
+      logObj.logId !== rawLogId) {
+    return arrRst;
   }
-
   let i = 0;
   let params = [];
   let sizeField = logObj.field.size;
@@ -100,8 +90,55 @@ dealCmd.dealRawLog = async function(logParse, logId, logMsg) {
   }
   sql += ');';
 
-  let db = await common.getDbConn('basvr');
-  return await db.execute(sql, params);
+  return [sql, params];
+}
+
+// 多个日志落库
+function dealMultiLog(logId, multiTableObj, logMsg) {
+  let arrRst = [null, null];
+  if (_.isUndefined(logId) || 
+      _.isUndefined(multiTableObj) || 
+      !common.isValidStr(logMsg)) {
+    return arrRst;
+  }
+  
+  let scriptStr = multiTableObj.script;
+  let workFunc = require('../plugin/' + scriptStr);
+  return workFunc(logId, logMsg)
+}
+
+// 处理原始日志
+dealCmd.dealRawLog = async function(logParse, logId, logMsg) {
+  if (_.isUndefined(logParse) ||
+      _.isNull(logParse) || 
+      !_.isNumber(logId) || 
+      !common.isValidStr(logMsg)) {
+    return;
+  }
+  // 单个日志落库
+  let singleLogObj = logParse.getSingleObj(logId.toString());
+  if (!_.isUndefined(singleLogObj) && 
+      _.isMap(singleLogObj.field) && 
+      singleLogObj.field.size > 0) {
+    let [sql, params] = dealSingleLog(singleLogObj, logMsg);
+    await common.logSql2Db(sql, params);
+  }
+  // 多个日志落库
+  let multiIdObj = logParse.getMultiIdObj(logId.toString());
+  if (_.isUndefined(multiIdObj)) {
+    return;
+  }
+  for (let [name, id] of multiIdObj) {
+    let multiTableObj = logParse.getMultiTableObj(name);
+    if (_.isUndefined(multiTableObj)) {
+      continue;
+    }
+    if (!multiTableObj.ids.has(id)) {
+      continue;
+    }
+    let [sql, params] = dealMultiLog(id, multiTableObj, logMsg);
+    await common.logSql2Db(sql, params);
+  }
 };
 
 // 处理内部请求

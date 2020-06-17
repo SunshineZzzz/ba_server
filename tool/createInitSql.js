@@ -12,6 +12,7 @@ USE basvr;
 
 `;
 
+// 生成初始化SQL语句
 function createInitSql(logParse) {
   for(let [_, logObj] of logParse) {
     initSqlString += 'CREATE TABLE `' + logObj.logName + '` (\n';
@@ -39,16 +40,14 @@ function createInitSql(logParse) {
   }
 }
 
-async function init() {
+async function main() {
   let logParse = await getlogXmlParse();
-  createInitSql(logParse);
-  await fsPromises.writeFile('./install.sql', initSqlString).then(() => {
-    console.log('OK, Sql has been written to ./install.sql')
-  }).catch((e) => {
-    console.error('write error,%s', e.toString());
-  })
+  createInitSql(logParse.mapSingle);
+  createInitSql(logParse.mapMultiple.tables);
+  await fsPromises.writeFile('./install.sql', initSqlString)
+  console.log('OK, Sql has been written to ./install.sql');
 }
 
-init().catch((e) => {
-  console.error('exec error,%s', e.toString());
+main().catch((e) => {
+  console.error('exec error,%s', e.stack);
 });

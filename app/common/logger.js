@@ -65,7 +65,7 @@ if (global.isMaster === true) {
     }
   });
 
-} else {
+} else if (global.isMaster === false) {
 
   log4js.configure({
     appenders: {

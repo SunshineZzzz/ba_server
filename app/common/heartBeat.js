@@ -2,7 +2,7 @@
 
 const _ = require('underscore');
 const config = require('config');
-const common = require('./common');
+const log4js = require('log4js');
 const eixtCode = require('./errorCode').eixtCode;
 
 // master心跳
@@ -51,7 +51,6 @@ class HeartBeatWorker {
   }
   doHBCheck() {
     let timeout = Date.now() - this.lastDataTime;
-    // print(timeout, this.nHBTimeout);
     if (timeout > this.nHBTimeout && _.isUndefined(process.channel)) {
       console.error('Master process has been down, timeout: %d', timeout);
       this.closeTimer();
