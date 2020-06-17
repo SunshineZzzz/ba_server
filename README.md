@@ -16,9 +16,10 @@
 ### 配置说明
 
 开发环境对应的配置文件`app/config/default.json`
+
 生产环境对应的配置文件`app/config/production.json`
 
-**特别注意：**工程的根目录请使用`${APP_PATH}`
+**特别注意**：工程的根目录请使用`${APP_PATH}`
 
 * `app.tcpHost` - tcp的对外地址 
 * `app.tcpPort` - tcp的对外端口
@@ -38,7 +39,7 @@
 * `hb.wCheckInterval` - worker检查master心跳间隔
 * `hb.wTimeout` - worker与master心跳超时时间
 * `logger.path` - 日志路径
-* `logger.name` - 日志名称，name.yyyyMMdd[hh].xxx
+* `logger.name` - 日志名称，最终会生成，name.yyyyMMdd[hh].xxx
 * `logger.level` - 日志等级
 * `logger.host` - 日志对外地址
 * `logger.port` - 日志对外端口
@@ -213,24 +214,23 @@ Misc1.6764,22-16:59:36,1003,PlayerDropStat,1001,1590369878,X,1,X,X,1,X,X,2219000
 
 **目前测试的MySQL类型(`int`,`int unsigned`,`varchar(x)`,`float`,`bigint`)**
 
-`Log.Single` - 单个日志落库项目
-`Log.Single.struct.id` - 对应原始日志ID，**不可省略**
-`Log.Single.struct.name` - 对应原始日志关键字，同样也是落库中表的名称，**不可省略**
-`Log.Single.struct.indexkey` - 对应落库表中的索引 
-`Log.Single.struct.desc` - 对应落库表的说明
-`Log.Single.struct.entry.name` - 对应落库表中的字段名称，**不可省略**
-`Log.Single.struct.entry.type` - 对应落库表中的字段类型，MySQL数据库所支持的类型，**不可省略**
-`Log.Single.struct.entry.number` - 对应原始日志分隔符分隔后的位置，从1开始，**不可省略**
-`Log.Single.struct.entry.desc` - 对应落库表中的字段说明
-`Log.Multiple` - 多个日志落库项目
-`Log.Multiple.struct.ids` - 对应协同日志组ID，`|`分隔，**不可省略**
-`Log.Multiple.struct.name` - 对应落库中表的名称，**不可省略**
-`Log.Multiple.struct.indexkey` - 对应落库表中的索引
-`Log.Multiple.struct.script` - 对应处理日志组的脚本，路径为`app/plugin/`，**不可省略**
-`Log.Multiple.struct.desc` - 对应落库表的说明
-`Log.Multiple.struct.entry.name` - 对应落库表中的字段名称，**不可省略**
-`Log.Multiple.struct.entry.type` - 对应落库表中的字段类型，MySQL数据库所支持的类型，**不可省略**
-`Log.Multiple.struct.entry.desc` - 对应落库表中的字段说明
+* `Log.Single` - 单个日志落库项目
+* `Log.Single.struct.id` - 对应原始日志ID，**不可省略**
+* `Log.Single.struct.name` - 对应原始日志关键字，同样也是落库中表的名称，**不可省略**
+* `Log.Single.struct.indexkey` - 对应落库表中的索引
+* `Log.Single.struct.desc` - 对应落库表的说明
+* `Log.Single.struct.entry.name` - 对应落库表中的字段名称，**不可省略**
+* `Log.Single.struct.entry.type` - 对应落库表中的字段类型，MySQL数据库所支持的类型，**不可省略**
+* `Log.Single.struct.entry.number` - 对应原始日志分隔符分隔后的位置，从1开始，**不可省略**
+* `Log.Single.struct.entry.desc` - 对应落库表中的字段说明
+* `Log.Multiple` - 多个日志落库项目
+* `Log.Multiple.struct.ids` - 对应协同日志组ID，`|`分隔，**不可省略**
+* `Log.Multiple.struct.indexkey` - 对应落库表中的索引
+* `Log.Multiple.struct.script` - 对应处理日志组的脚本，路径为`app/plugin/`，**不可省略**
+* `Log.Multiple.struct.desc` - 对应落库表的说明
+* `Log.Multiple.struct.entry.name` - 对应落库表中的字段名称，**不可省略**
+* `Log.Multiple.struct.entry.type` - 对应落库表中的字段类型，MySQL数据库所支持的类型，**不可省略**
+* `Log.Multiple.struct.entry.desc` - 对应落库表中的字段说明
 
 #### 例如
 
@@ -269,7 +269,7 @@ Misc1.6764,22-16:59:36,1003,PlayerDropStat,1001,1590369878,X,1,X,X,1,X,X,2219000
 
 ### 启动
 
-**数据库初始化和依赖**
+**数据库初始化和安装依赖**
 ``` sh
 cd tool
 node createInitSql.js
@@ -283,4 +283,4 @@ npm install
 cd bin
 sh start.sh
 ```
-**windows使用对应的xxx.bat**
+**windows使用对应的xxx.bat(start.bat,stop.bat,restart.bat)**
