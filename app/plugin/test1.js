@@ -106,13 +106,16 @@ class Test1 {
 let test1 = new Test1(10);
 
 // work
-module.exports = function(logId, logMsg) {
+module.exports = function(d) {
   let arrRst = [null, null];
-  let playerIdIndex = test1.getPlayerIdIndex(logId);
+  if (common.isNullOrUndefined(d)) {
+    return arrRst;
+  }
+  let playerIdIndex = test1.getPlayerIdIndex(d.logId);
   if (playerIdIndex === undefined) {
     return arrRst;
   }
-  let [arrLogs, processInfo, processTime, rawLogId, rawLogName] = common.logMsg2Arr(logMsg);
+  let [arrLogs, processInfo, processTime, rawLogId, rawLogName] = common.logMsg2Arr(d);
   if (arrLogs === null) {
     return arrRst;
   }
@@ -121,7 +124,7 @@ module.exports = function(logId, logMsg) {
     return arrRst;
   }
   let table = test1.getCache(playerId);
-  let fields = table.getFileds(logId)
+  let fields = table.getFileds(d.logId)
   if (fields === undefined) {
     return arrRst;
   }

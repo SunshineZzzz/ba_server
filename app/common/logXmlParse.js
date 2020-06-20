@@ -47,7 +47,7 @@ function parseSingle(singleStructs) {
       if (_.isUndefined(entrys[j].$) || 
           !common.isValidStr(entrys[j].$.name) || 
           !common.isValidStr(entrys[j].$.type) || 
-          !common.strIsNumber(entrys[j].$.number)) {
+          !common.isAllowNumberProp(entrys[j].$.number)) {
         logObj = null;
         break;
       }

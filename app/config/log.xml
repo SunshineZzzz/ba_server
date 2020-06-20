@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!--
--->
 <metalib name="Log" version="1">
 	<command name="Single" desc="单个日志落库项目">
 	</command>

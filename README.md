@@ -221,7 +221,7 @@ Misc1.6764,22-16:59:36,1003,PlayerDropStat,1001,1590369878,X,1,X,X,1,X,X,2219000
 * `Log.Single.struct.desc` - 对应落库表的说明
 * `Log.Single.struct.entry.name` - 对应落库表中的字段名称，**不可省略**
 * `Log.Single.struct.entry.type` - 对应落库表中的字段类型，MySQL数据库所支持的类型，**不可省略**
-* `Log.Single.struct.entry.number` - 对应原始日志分隔符分隔后的位置，从1开始，**不可省略**
+* `Log.Single.struct.entry.number` - 对应原始日志分隔符分隔后的位置，从1开始，可以写入**AutoSvrId** 自动获取大区ID，**不可省略**
 * `Log.Single.struct.entry.desc` - 对应落库表中的字段说明
 * `Log.Multiple` - 多个日志落库项目
 * `Log.Multiple.struct.ids` - 对应协同日志组ID，`|`分隔，**不可省略**
@@ -239,7 +239,7 @@ Misc1.6764,22-16:59:36,1003,PlayerDropStat,1001,1590369878,X,1,X,X,1,X,X,2219000
 <metalib name="Log" version="1">
   <command name="Single" desc="单个日志落库项目">
     <struct desc="玩家登陆" id="1001" name="PlayerLogin" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
-      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="1"/>
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="AutoSvrId"/>
       <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
       <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
       <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>

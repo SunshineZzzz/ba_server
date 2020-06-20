@@ -52,8 +52,10 @@ function handleConnection(logParse, socket) {
             logger.error('[net exception]: eSTS_INNERBA_DATA error, %s', jsonStr);
             return;
           }
+          d.grpId = socket.grpId;
+          d.logId = d.logId.toString();
           logger.info('get eSTS_INNERBA_DATA: %s', JSON.stringify(d));
-          await dealCmd.dealRawLog(logParse, d.logId, d.logMsg).catch((e) => {
+          await dealCmd.dealRawLog(logParse, d).catch((e) => {
             logger.error('dealCmd.dealRawLog error: %s', e.stack);
           });
           break;

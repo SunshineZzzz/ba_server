@@ -156,17 +156,31 @@ common.mapOrSetSerialize = function (mapObj, space = '  ') {
 }
 
 // 将原始日志转换成数组
-common.logMsg2Arr = function(logMsg) {
-  if (_.isUndefined(logMsg) || _.isNull(logMsg)) {
+common.logMsg2Arr = function (d) {
+  if (this.isNullOrUndefined(d) ||
+      !this.isValidStr(d.logMsg) || 
+      !_.isNumber(d.grpId)) {
     return [null, null, null, null, null];
   }
-  let arrLogs = logMsg.split(logSeparator);
+  let arrLogs = d.logMsg.split(logSeparator);
   let processInfo = arrLogs.shift().trim();
   let processTime = arrLogs.shift().trim();
   let rawLogId = arrLogs.shift().trim();
   let rawLogName = arrLogs.shift().trim();
   arrLogs.unshift('pad');
+  // 严禁写入下标，并赋值
+  // 并不影响arr的长度
+  arrLogs['AutoSvrId'] = d.grpId;
   return [arrLogs, processInfo, processTime, rawLogId, rawLogName];
+}
+
+// NumberProp是否是整数或者允许的关键字
+common.isAllowNumberProp = function (numberProp) {
+  if (this.isNullOrUndefined(numberProp) || 
+      (!this.strIsNumber(numberProp) && numberProp !== 'AutoSvrId')) {
+    return false;
+  }
+  return true;
 }
 
 module.exports = common;

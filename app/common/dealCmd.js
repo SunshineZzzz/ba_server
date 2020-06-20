@@ -47,14 +47,13 @@ dealCmd.delSocket = function (svrGrpId) {
 };
 
 // 单个日志落库
-function dealSingleLog(logObj, logMsg) {
+function dealSingleLog(logObj, d) {
   let arrRst = [null, null];
-  if (_.isNull(logObj) || 
-      _.isUndefined(logObj) || 
-      !common.isValidStr(logMsg)) {
+  if (common.isNullOrUndefined(logObj) || 
+      common.isNullOrUndefined(d)) {
     return arrRst;
   }
-  let [arrLogs, processInfo, processTime, rawLogId, rawLogName] = common.logMsg2Arr(logMsg);
+  let [arrLogs, processInfo, processTime, rawLogId, rawLogName] = common.logMsg2Arr(d);
   if (arrLogs === null) {
     return arrRst;
   }
@@ -89,45 +88,41 @@ function dealSingleLog(logObj, logMsg) {
     params.push(arrLogs[number]);
   }
   sql += ');';
-
   return [sql, params];
 }
 
 // 多个日志落库
-function dealMultiLog(logId, multiTableObj, logMsg) {
+function dealMultiLog(multiTableObj, d) {
   let arrRst = [null, null];
-  if (_.isUndefined(logId) || 
-      _.isUndefined(multiTableObj) || 
-      !common.isValidStr(logMsg)) {
+  if (common.isNullOrUndefined(multiTableObj) || 
+      common.isNullOrUndefined(d)) {
     return arrRst;
   }
-  
   let scriptStr = multiTableObj.script;
   let workFunc = require('../plugin/' + scriptStr);
-  return workFunc(logId, logMsg)
+  return workFunc(d)
 }
 
 // 处理原始日志
-dealCmd.dealRawLog = async function(logParse, logId, logMsg) {
-  if (_.isUndefined(logParse) ||
-      _.isNull(logParse) || 
-      !_.isNumber(logId) || 
-      !common.isValidStr(logMsg)) {
+dealCmd.dealRawLog = async function(logParse, d) {
+  if (common.isNullOrUndefined(logParse) || 
+      common.isNullOrUndefined(d)) {
     return;
   }
   // 单个日志落库
-  let singleLogObj = logParse.getSingleObj(logId.toString());
+  let singleLogObj = logParse.getSingleObj(d.logId);
   if (!_.isUndefined(singleLogObj) && 
       _.isMap(singleLogObj.field) && 
       singleLogObj.field.size > 0) {
-    let [sql, params] = dealSingleLog(singleLogObj, logMsg);
+    let [sql, params] = dealSingleLog(singleLogObj, d);
     await common.logSql2Db(sql, params);
   }
   // 多个日志落库
-  let multiIdObj = logParse.getMultiIdObj(logId.toString());
+  let multiIdObj = logParse.getMultiIdObj(d.logId);
   if (_.isUndefined(multiIdObj)) {
     return;
   }
+  // id === d.logId
   for (let [name, id] of multiIdObj) {
     let multiTableObj = logParse.getMultiTableObj(name);
     if (_.isUndefined(multiTableObj)) {
@@ -136,7 +131,7 @@ dealCmd.dealRawLog = async function(logParse, logId, logMsg) {
     if (!multiTableObj.ids.has(id)) {
       continue;
     }
-    let [sql, params] = dealMultiLog(id, multiTableObj, logMsg);
+    let [sql, params] = dealMultiLog(multiTableObj, d);
     await common.logSql2Db(sql, params);
   }
 };
