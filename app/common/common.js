@@ -163,6 +163,9 @@ common.logMsg2Arr = function (d) {
     return [null, null, null, null, null];
   }
   let arrLogs = d.logMsg.split(logSeparator);
+  arrLogs = arrLogs.map((elem) => {
+    return elem.trim();
+  });
   let processInfo = arrLogs.shift().trim();
   let processTime = arrLogs.shift().trim();
   let rawLogId = arrLogs.shift().trim();
@@ -170,14 +173,21 @@ common.logMsg2Arr = function (d) {
   arrLogs.unshift('pad');
   // 严禁写入下标，并赋值
   // 并不影响arr的长度
-  arrLogs['AutoSvrId'] = d.grpId;
+  arrLogs['autoSvrId'] = d.grpId;
+  // Object.defineProperty(arrLogs, 'autoTime', { 
+  //   get: function() {
+  //     return parseInt(new Date().getTime()/1000);
+  //   } 
+  // });
   return [arrLogs, processInfo, processTime, rawLogId, rawLogName];
 }
 
 // NumberProp是否是整数或者允许的关键字
 common.isAllowNumberProp = function (numberProp) {
   if (this.isNullOrUndefined(numberProp) || 
-      (!this.strIsNumber(numberProp) && numberProp !== 'AutoSvrId')) {
+      (!this.strIsNumber(numberProp) && 
+        numberProp !== 'autoSvrId' /*&& 
+        numberProp !== 'autoTime'*/)) {
     return false;
   }
   return true;

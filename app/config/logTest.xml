@@ -2,7 +2,7 @@
 <metalib name="Log" version="1">
   <command name="Single" desc="单个日志落库项目">
     <struct desc="玩家登陆" id="1001" name="PlayerLogin" indexkey="INDEX(`GameSvrId`)|INDEX(`PlayerID`)">
-      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="AutoSvrId"/>
+      <entry desc="登录的游戏服务器编号" name="GameSvrId" type="int" number="autoSvrId"/>
       <entry desc="游戏事件的时间" name="EventTime" type="int unsigned" number="2"/>
       <entry desc="ios 0 /android 1" name="PlatID" type="int" number="4"/>
       <entry desc="微信 0 /手Q 1" name="AreaID" type="int" number="7"/>
