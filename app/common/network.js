@@ -13,6 +13,7 @@ const common = require('./common');
 function handleConnection(logParse, socket) {
   let remoteAddress = `${socket.remoteAddress}:${socket.remotePort}`;
   logger.info('game socket connection from %s', remoteAddress);
+  // socket.setEncoding('utf8');
   let buf = null;
 
   socket.on('data', onConnData);
@@ -44,6 +45,8 @@ function handleConnection(logParse, socket) {
           socket.grpId = d.grpId;
           logger.info('game socket say hello %s', jsonStr);
           dealCmd.setSocket(d.grpId, socket);
+          // 这里必须要回复消息的，客户端收到这个消息，说明该socket已经成功绑定到worker，
+          // 从而可以开始逻辑交互了
           socket.write(netPacket.packData(dataCmd, { msg: 'ba server register ok' }));
           break;
         }

@@ -31,6 +31,13 @@ common.getCpuNum = function () {
   return os.cpus().length;
 };
 
+// 休眠
+common.sleep = (seconds) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, (seconds * 1000));
+  });
+};
+
 // 递归同步创建目录
 common.mkdirsSync = function (dirname) {
   if (fs.existsSync(dirname)) {

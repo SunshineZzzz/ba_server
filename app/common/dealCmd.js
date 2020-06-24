@@ -3,7 +3,7 @@
 const _ = require('underscore');
 const logger = require('./logger');
 const common = require('./common');
-const innerCode = require('../common/errorCode').innerCode;
+const innerCode = require('./errorCode').innerCode;
 const STSCmd = require('../config/STSCmd');
 const netPacket = require('./netPacket');
 
@@ -109,6 +109,7 @@ dealCmd.dealRawLog = async function(logParse, d) {
       common.isNullOrUndefined(d)) {
     return;
   }
+  
   // 单个日志落库
   let singleLogObj = logParse.getSingleObj(d.logId);
   if (!_.isUndefined(singleLogObj) && 

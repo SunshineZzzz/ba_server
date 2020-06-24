@@ -14,7 +14,7 @@ function init() {
   let tcpPort = config.has('app.tcpPort') ? config.get('app.tcpPort') : 19999;
   let tcpServer = net.createServer();
 
-  if(!master.initWorkers(nodeExecPath)) {
+  if (!master.initWorkers(nodeExecPath)) {
      logger.error(`initWorkers error,%s`, nodeExecPath);
      return;
   }

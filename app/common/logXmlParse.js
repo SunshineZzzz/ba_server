@@ -236,6 +236,7 @@ async function parseXML() {
   }
   // console.log(logXml);
   // console.log(logXml.serialize());
+  // await common.sleep(10);
   return logXml;
 };
 
