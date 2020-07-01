@@ -5,7 +5,7 @@
 * 支持单个日志落库，多个日志协同落库
 * 支持日志发送端与baserver内部消息逻辑
 
-## 文档
+## 文档目录
 
 * [配置说明](#配置说明)
 * [日志发送格式](#日志发送格式)
@@ -28,6 +28,7 @@
 * `app.nMaxRestart` - worker重启次数，0表示重启没有限制
 * `app.waitTime` - 内部请求超时，毫秒
 * `app.logSeparator` - 原始日志分隔符
+* `app.helloTimeout` - 连接对象发送hello的超时时间，超过会被服务器kick
 * `mysql.log` - mysql执行日志是否开启
 * `mysql.basvr.host` - mysql服务的对外地址
 * `mysql.basvr.port` - mysql服务的对外端口
@@ -55,7 +56,8 @@
 		"logXmlFile": "${APP_PATH}/app/config/log.xml",
 		"nMaxRestart": 10,
 		"waitTime": 5000,
-		"logSeparator": ","
+		"logSeparator": ",",
+		"helloTimeout": 15000
 	},
 	"mysql": {
 		"log": true,

@@ -24,7 +24,7 @@ let logSeparator = config.has('app.logSeparator') ? config.get('app.logSeparator
 // null or undefined
 common.isNullOrUndefined = function(object) {
   return (object === null || object === undefined);
-}
+};
 
 // 获取CPU数量
 common.getCpuNum = function () {
@@ -55,7 +55,7 @@ common.delFile = function (path) {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
   }
-}
+};
 
 // work进程退出
 common.workExit = function (code) {
@@ -146,12 +146,12 @@ common.dealWaitInnerMessage = function (reqId, err, data) {
 // 是否是有效的字符串
 common.isValidStr = function (str) {
   return (_.isString(str) && str.trim().length > 0);
-}
+};
 
 // 字符串是否可以转化成整数
 common.strIsNumber = function (str, radix = 10) {
   return !isNaN(parseInt(str, radix));
-}
+};
 
 // Map or Set 对象的序列化 
 common.mapOrSetSerialize = function (mapObj, space = '  ') {
@@ -160,7 +160,7 @@ common.mapOrSetSerialize = function (mapObj, space = '  ') {
   }
   // ...遍历generator
   return JSON.stringify([...mapObj.entries()], null, space);
-}
+};
 
 // 将原始日志转换成数组
 common.logMsg2Arr = function (d) {
@@ -187,7 +187,7 @@ common.logMsg2Arr = function (d) {
   //   } 
   // });
   return [arrLogs, processInfo, processTime, rawLogId, rawLogName];
-}
+};
 
 // NumberProp是否是整数或者允许的关键字
 common.isAllowNumberProp = function (numberProp) {
@@ -198,6 +198,20 @@ common.isAllowNumberProp = function (numberProp) {
     return false;
   }
   return true;
-}
+};
+
+// 清除socket上的timer并且kick
+common.clearTimerAndKick = function (socket, bKick = false) {
+  if (!(socket instanceof net.Socket)) {
+    return;
+  }
+  if (!this.isNullOrUndefined(socket.helloTimeoutHandle)) {
+    clearTimeout(socket.helloTimeoutHandle);
+    socket.helloTimeoutHandle = null;
+  }
+  if (bKick === true) {
+    socket.destroy();
+  }
+};
 
 module.exports = common;

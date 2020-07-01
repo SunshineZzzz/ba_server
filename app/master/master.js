@@ -73,7 +73,7 @@ class Worker {
       this.worker.send(msg);
     }
   }
-};
+}
 
 // worker启动
 master.startWork = function (nodeExecPath, index) {
@@ -126,7 +126,7 @@ master.roundRobinWorker = function (tcpServer) {
     }
     cur = Number.parseInt((cur + 1) % cpuNum);
   });
-}
+};
 
 // 初始化所有worker
 master.initWorkers = function (nodeExecPath) {

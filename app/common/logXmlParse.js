@@ -238,6 +238,6 @@ async function parseXML() {
   // console.log(logXml.serialize());
   // await common.sleep(10);
   return logXml;
-};
+}
 
 module.exports = parseXML;

@@ -6,7 +6,8 @@
 		"logXmlFile": "${APP_PATH}/app/config/log.xml",
 		"nMaxRestart": 10,
 		"waitTime": 5000,
-		"logSeparator": ","
+		"logSeparator": ",",
+		"helloTimeout": 15000
 	},
 	"mysql": {
 		"log": true,

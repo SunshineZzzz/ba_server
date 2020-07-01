@@ -30,7 +30,7 @@ init().then(() => {
   // 启动没问题告诉master
   process.send('workerStart');
 }).catch((e) => {
-  logger.error(e);
+  logger.error(e.stack);
   process.exit(eixtCode.startErr);
 });
 
