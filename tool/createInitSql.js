@@ -6,7 +6,7 @@ process.env.NODE_CONFIG_DIR = '../app/config';
 const getlogXmlParse = require('../app/common/logXmlParse.js');
 let initSqlString = `DELIMITER ;
 
-CREATE DATABASE \`basvr\` CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE \`basvr\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE basvr;
 
@@ -33,9 +33,9 @@ function createInitSql(logParse) {
     }
     initSqlString = initSqlString.slice(0, initSqlString.length - 2);
     if (logObj.desc && logObj.desc.trim().length > 0) {
-      initSqlString += `\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '${logObj.desc}';\n\n`;
+      initSqlString += `\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '${logObj.desc}';\n\n`;
     } else {
-      initSqlString += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n\n';
+      initSqlString += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\n';
     }
   }
 }

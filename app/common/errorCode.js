@@ -3,7 +3,7 @@
 let errorCode = {};
 
 // 进程退出错误码
-errorCode.eixtCode = {
+errorCode.exitCode = {
 	// 正常退出
 	normal: 0,
 	// 运行时错误退出

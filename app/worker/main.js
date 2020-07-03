@@ -2,7 +2,7 @@
 
 global.isMaster = false;
 global.print = console.log.bind(console);
-const eixtCode = require('../common/errorCode').eixtCode;
+const exitCode = require('../common/errorCode').exitCode;
 const network = require('../common/network');
 const logger = require('../common/logger');
 const heartBeat = require('../common/heartBeat');
@@ -13,8 +13,9 @@ async function init() {
   let logParse = await getlogXmlParse();
   let end = new Date().getTime();
   process.on('message', (msg, obj) => {
-    if (msg === 'socket') {
+    if (msg.indexOf('socket|') !== -1) {
       if (obj) {
+        obj.remoteAddressAndPort = msg.split('|')[1];
         network.handleConnection(logParse, obj);
       }
     } else if (msg === 'heartBeat') {
@@ -31,7 +32,7 @@ init().then(() => {
   process.send('workerStart');
 }).catch((e) => {
   logger.error(e.stack);
-  process.exit(eixtCode.startErr);
+  process.exit(exitCode.startErr);
 });
 
 require('../process');

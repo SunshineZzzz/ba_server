@@ -3,7 +3,7 @@
 const os = require('os');
 const log4js = require('log4js');
 const logger = require('./common/logger');
-const eixtCode = require('./common/errorCode').eixtCode;
+const exitCode = require('./common/errorCode').exitCode;
 
 // 捕获没有关注的异常事件
 process.on('uncaughtException', (err, origin) => {
@@ -24,5 +24,5 @@ process.on('uncaughtException', (err, origin) => {
   }
 
   logger.error(err);
-  process.exit(eixtCode.rtErr);
+  process.exit(exitCode.rtErr);
 });

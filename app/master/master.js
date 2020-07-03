@@ -3,7 +3,7 @@
 const fs = require('fs');
 const config = require('config');
 const childProcess = require('child_process');
-const eixtCode = require('../common/errorCode').eixtCode;
+const exitCode = require('../common/errorCode').exitCode;
 const logger = require('../common/logger');
 const nMaxRestart = (config.has('app.nMaxRestart') && config.get('app.nMaxRestart') >= 0) ? 
   config.get('app.nMaxRestart') : 10;
@@ -49,7 +49,7 @@ class Worker {
       return false;
     }
 
-    if (eixtCode.hbErr === this.lastCode || eixtCode.startErr === this.lastCode) {
+    if (exitCode.hbErr === this.lastCode || exitCode.startErr === this.lastCode) {
       return false;
     }
     
@@ -66,7 +66,11 @@ class Worker {
     // The child will receive the object as the second argument passed to the callback function 
     // registered on the 'message' event. 
     // ** Any data that is received and buffered in the socket will not be sent to the child. **
-    return this.worker.send('socket', socket, {keepOpen: false});
+    // 
+    // worker获取remoteAddress结果异常，编译node源码，断点调试无果，所以master发送给worker吧
+    let remoteAddress = `${socket.remoteAddress}:${socket.remotePort}`;
+    return this.worker.send(`socket|${remoteAddress}`, socket, {keepOpen: false});
+    remoteAddress = null;
   }
   sendMsg(msg) {
     if (this.isWork()) {
@@ -116,6 +120,8 @@ master.startWork = function (nodeExecPath, index) {
 master.roundRobinWorker = function (tcpServer) {
   let cur = 0;
   tcpServer.on('connection', (socket) => {
+    // master中阻止'data'事件
+    socket.pause();
     // 发送的时候，会造成master无法操作socket
     // 所以这里先判断一次 isWork
     if (this.arrWorkers[cur].isWork()) {

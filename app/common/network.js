@@ -13,31 +13,15 @@ const helloTimeout = (config.has('app.helloTimeout') && config.get('app.helloTim
 
 // 处理连接
 function handleConnection(logParse, socket) {
-  // 地址和端口有可能为空，具体请看
-  // https://github.com/nodejs/node/issues/23858
-  // https://github.com/nodejs/node-v0.x-archive/issues/7566
-  // 复现方法
-  // https://github.com/nodejs/node-v0.x-archive/issues/16523
-  // 抓包发现client再握手完成后，直接发送了Rset报文造成，以下是抓包记录
-  /*
-    10:29:46.820255 c4:54:44:76:72:a6 > 00:e0:1a:68:01:6e, ethertype IPv4 (0x0800), length 66: (tos 0x0, ttl 64, id 60817, offset 0, flags [DF], proto TCP (6), length 52)
-        192.168.6.113.38363 > 192.168.6.114.12345: Flags [S], cksum 0x9c9b (correct), seq 2343486683, win 11680, options [mss 1460,nop,nop,sackOK,nop,wscale 10], length 0
-    10:29:46.820324 00:e0:1a:68:01:6e > c4:54:44:76:72:a6, ethertype IPv4 (0x0800), length 66: (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 52)
-        192.168.6.114.12345 > 192.168.6.113.38363: Flags [S.], cksum 0xf227 (correct), seq 2703017176, ack 2343486684, win 29200, options [mss 1460,nop,nop,sackOK,nop,wscale 7], length 0
-    10:29:46.820420 c4:54:44:76:72:a6 > 00:e0:1a:68:01:6e, ethertype IPv4 (0x0800), length 60: (tos 0x0, ttl 64, id 60818, offset 0, flags [DF], proto TCP (6), length 40)
-        192.168.6.113.38363 > 192.168.6.114.12345: Flags [.], cksum 0xa4fe (correct), ack 1, win 12, length 0
-    10:29:46.820463 c4:54:44:76:72:a6 > 00:e0:1a:68:01:6e, ethertype IPv4 (0x0800), length 60: (tos 0x0, ttl 64, id 60819, offset 0, flags [DF], proto TCP (6), length 40)
-        192.168.6.113.38363 > 192.168.6.114.12345: Flags [R.], cksum 0xa4fa (correct), seq 1, ack 1, win 12, length 0
-  */
   // 官方文档也进行说明
   // socket.remoteAddress - Value may be undefined if the socket is destroyed (for example, if the client disconnected).
   if (socket.remoteAddress === undefined || socket.destroyed === true) {
-    logger.fatal('game socket is destroyed');
+    logger.fatal('game socket is destroyed from %s', socket.remoteAddressAndPort);
     socket.destroy();
     return;
   }
-  let remoteAddress = `${socket.remoteAddress}:${socket.remotePort}`;
-  logger.info('game socket connection from %s', remoteAddress);
+
+  logger.info('game socket connection from %s', socket.remoteAddressAndPort);
   // socket.setEncoding('utf8');
   let buf = null;
 
@@ -49,6 +33,8 @@ function handleConnection(logParse, socket) {
   socket.on('error', onConnError);
   // hello发送超时
   socket.helloTimeoutHandle = setTimeout(onHelloTimeout, helloTimeout, socket);
+  // 一切就绪，恢复'data'事件
+  socket.resume();
 
   // 处理数据
   function onConnData(chunk) {
@@ -124,19 +110,19 @@ function handleConnection(logParse, socket) {
   }
   // 连接关系
   function onConnClose() {
-    logger.info('game socket from %s close', remoteAddress);
+    logger.info('game socket from %s close', socket.remoteAddressAndPort);
     dealCmd.delSocket(socket.grpId);
     common.clearTimerAndKick(socket);
   }
   // 连接错误
   function onConnError(err) {
-    logger.info('game socket connection %s error: %s', remoteAddress, err.message);
+    logger.info('game socket connection %s error: %s', socket.remoteAddressAndPort, err.message);
     dealCmd.delSocket(socket.grpId);
     common.clearTimerAndKick(socket);
   }
   // hello发送超时
   function onHelloTimeout(socket) {
-    logger.info('game socket connection %s send hello timeout: %d and kick', remoteAddress, helloTimeout);
+    logger.info('game socket connection %s send hello timeout: %d and kick', socket.remoteAddressAndPort, helloTimeout);
     common.clearTimerAndKick(socket, true);
   }
 }
